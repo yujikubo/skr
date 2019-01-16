@@ -1,0 +1,91 @@
+import mysql.connector
+
+import feedparser
+
+import ssl
+
+import urllib.parse
+
+#dbconnect
+
+
+
+conn = mysql.connector.connect(user='root',password ='password' ,host='localhost',database='rss_result')
+
+
+
+cur = conn.cursor()
+
+
+
+#RSS
+
+if hasattr(ssl, '_create_unverified_context'):
+
+    ssl._create_default_https_context = ssl._create_unverified_context
+
+rss = feedparser.parse('http://xn--n8j6dph8b8px95su40akj9f.com/feed')
+
+mediaid = "150978319"
+
+fname = "http://xn--n8j6dph8b8px95su40akj9f.com/"
+
+
+
+#try:
+
+    # CREATE_table
+
+
+
+#except:
+
+#    import traceback
+
+#    traceback.print_exc()
+
+
+
+#elements
+
+
+
+type(rss)
+
+
+
+#for k in rss.keys():
+
+
+
+for content in rss["entries"]:
+
+    amediaid = mediaid
+
+    aname = fname
+
+    aupdated = content["updated"]
+
+    atitle = content["title"]
+
+    alink = urllib.parse.unquote(content["link"])
+
+    adescription = urllib.parse.unquote(content["description"])
+
+    cur.execute("insert into rss_result1 (mediaid , name, updated , title , link , description) values (%s , %s ,%s ,%s ,%s ,%s )",[amediaid , aname , aupdated,atitle,alink,adescription])
+
+    conn.commit()
+
+
+
+    #cur.execute("select * from user;")
+
+    #print (fname , ",","'",content["updated"],"'",",","'",content["title"],"'",",","'",content["link"],"'",",","'",content["description"],"'")
+
+
+
+#dbclose
+
+cur.close
+
+conn.close
